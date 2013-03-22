@@ -41,7 +41,7 @@ public function plugins_loaded()
 {
     add_action('init', array(&$this, 'init'));
     add_filter('query_vars', array(&$this, 'query_vars'));
-    add_action('template_redirect', array(&$this, 'template_redirect'));
+    add_action('template_redirect', array(&$this, 'template_redirect'), 11);
     if (is_admin()) {
         add_action("admin_menu", array(&$this, "admin_menu"));
         add_action("admin_init", array(&$this, "admin_init"));

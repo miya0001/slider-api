@@ -7,11 +7,14 @@ Stable tag: 0.2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-This plugin delivers the articles in custom post types as json api for image slide shaw.
+This plugin creates a slide show image uploader and provides json api, which includes image src, link url and alt infos. Concentrate on your javascript!
 
 == Description ==
 
-* This plugin delivers the articles in custom post types as json api for image slide shaw.
+This plugin creates a slide show image uploader and provides json api, which includes image src, link url and alt infos.
+
+Concentrate on your javascript!
+
 * When developing an image slider, you can concentrate on javascript only.
 * To add a custom post type, make more api endpoints.
 * You don't need develop user interface.
