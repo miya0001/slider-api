@@ -41,6 +41,7 @@ public function plugins_loaded()
 {
     add_action('init', array(&$this, 'init'));
     add_filter('query_vars', array(&$this, 'query_vars'));
+    // piority 11 for fired after nginx cache controller
     add_action('template_redirect', array(&$this, 'template_redirect'), 11);
     if (is_admin()) {
         add_action("admin_menu", array(&$this, "admin_menu"));
