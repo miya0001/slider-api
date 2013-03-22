@@ -16,6 +16,20 @@
 <?php foreach(get_option(self::option_sliders, array()) as $id => $name): ?>
     <div class="sliders tab-pane well" id="<?php echo esc_attr($id); ?>" style="overflow: auto;">
     <h4 class="slider-label"><?php echo esc_html($name); ?></h4>
+    <h5>API Endpoint</h5>
+    <?php if (get_option('permalink_structure')): ?>
+    <p><code><?php echo home_url(SLIDER_API_ENDPOINT); ?>/<?php echo $id; ?>/</code></p>
+    <?php else: ?>
+    <p><code><?php echo home_url(); ?>/?<?php echo SLIDER_API_ENDPOINT; ?>=<?php echo $id; ?></code></p>
+    <?php endif; ?>
+    <p>or you can paste the code in functions.php like below.</p>
+    <pre>add_action('wp_footer', 'my_sliders');
+function my_sliders(){
+    echo '&lt;script type="text/javascript"&gt;';
+    echo "var slider_apis = ".get_slider_api_endpoints().";";
+    echo '&lt;/script&gt;';
+}</pre>
+    <h5>Default Image Size</h5>
     </div>
 <?php endforeach; ?>
     </div>

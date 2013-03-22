@@ -305,7 +305,7 @@ public function url_meta_box($post, $box)
     $url = get_post_meta($post->ID, '_link_url', true);
     printf(
         '<input type="text" name="slider_api_link_url" value="%s" style="width:100%%;" />',
-        esc_attr($url)
+        esc_attr(esc_url($url, array('http', 'https')))
     );
 }
 
@@ -354,6 +354,8 @@ public function template_redirect()
                         apply_filters('slider_api_default_image_size', 'post-thumbnail')
                     );
                 }
+                $link_url = get_post_meta($post->ID, '_link_url', true);
+                $link_url = esc_url($link_url, array('http', 'https'));
                 $slides[] = array(
                     'ID' => $post->ID,
                     'post_title' => esc_html($post->post_title),
