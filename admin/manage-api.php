@@ -13,7 +13,7 @@
 <div class="tabbable tabs-left">
     <ul id="sliders-tab" class="nav nav-tabs"></ul>
     <div class="tab-content">
-<?php foreach(get_option(self::option_sliders, array()) as $id => $name): ?>
+<?php foreach(get_sliders_array() as $id => $name): ?>
     <div class="sliders tab-pane well" id="<?php echo esc_attr($id); ?>" style="overflow: auto;">
     <h4 class="slider-label"><?php echo esc_html($name); ?></h4>
     <h5>API Endpoint</h5>

@@ -3,7 +3,7 @@
 <div class="well" style="background-color: #ffffff; margin-top: 3em; overflow: auto;">
 <h3 style="margin-top: 0;">Delete Slider API</h3>
 <ul style="margin-top: 2em;">
-<?php foreach(get_option(self::option_sliders) as $id => $name): ?>
+<?php foreach(get_sliders_array() as $id => $name): ?>
 <li><label class="radio"><input type="radio" name="delete-slider" value="<?php echo $id; ?>" /> <?php echo esc_html($name); ?></label></li>
 <?php endforeach; ?>
 </ul>

@@ -10,10 +10,13 @@ Domain Path: /languages
 Text Domain: slider
 */
 
+require_once(dirname(__FILE__).'/inc/functions.php');
+
 register_activation_hook(__FILE__, 'slider_api_activation');
 register_deactivation_hook(__FILE__, 'slider_api_deactivation');
 
 define('SLIDER_API_ENDPOINT', 'slider');
+define('SLIDER_API_OPTION_KEY', 'slider-api');
 
 function slider_api_activation() {
     add_rewrite_endpoint(SLIDER_API_ENDPOINT, EP_ROOT);
@@ -30,7 +33,6 @@ class SliderAPI {
 
 const version = '0.2.0';
 const nonce_key = 'slider-api';
-const option_sliders = 'slider-api';
 
 function __construct()
 {
@@ -52,7 +54,7 @@ public function plugins_loaded()
 }
 
 public function pre_get_posts($wp_query) {
-    $sliders = get_option(self::option_sliders);
+    $sliders = get_option(SLIDER_API_OPTION_KEY);
     if (isset($_GET['post_type']) && in_array($_GET['post_type'], array_keys($sliders))) {
         if (!isset($wp_query->query_vars['orderby'])) {
             $wp_query->query_vars['orderby'] = 'menu_order';
@@ -78,9 +80,9 @@ public function admin_init()
             foreach ($posts as $p) {
                 wp_delete_post($p->ID, true);
             }
-            $sliders = get_option(self::option_sliders);
+            $sliders = get_option(SLIDER_API_OPTION_KEY);
             unset($sliders[$_POST['id']]);
-            update_option(self::option_sliders, $sliders);
+            update_option(SLIDER_API_OPTION_KEY, $sliders);
             $url = admin_url('admin.php?page=slider-api-settings');
             set_transient('slider-api-updated', 1, 5);
             wp_redirect($url);
@@ -91,9 +93,9 @@ public function admin_init()
     if (isset($_GET['page']) && $_GET['page'] === 'slider-api') {
         if (isset($_POST['add-slider']) && wp_verify_nonce($_POST['add-slider'], self::nonce_key)) {
             if (isset($_POST['slider-name']) && strlen($_POST['slider-name'])) {
-                $sliders = get_option(self::option_sliders);
+                $sliders = get_option(SLIDER_API_OPTION_KEY);
                 $sliders[self::get_slider_id()] = $_POST['slider-name'];
-                update_option(self::option_sliders, $sliders);
+                update_option(SLIDER_API_OPTION_KEY, $sliders);
                 set_transient('slider-api-updated', 1, 5);
             }
             $url = admin_url('admin.php?page=slider-api&saved=true');
@@ -149,14 +151,14 @@ public function admin_menu()
     add_action('admin_print_scripts-'.$hook, array(&$this, 'admin_scripts'));
 
     $max = $max + 1;
-    $temp_menu = $menu; // これやらないと無限ループ
+    $temp_menu = $menu; // to prevent infinite loops
     foreach ($temp_menu as $key => $item) {
         if (isset($item[6]) && preg_match('/slider-api\/img\/icon2.png/', $item[6])) {
             $menu[$max++] = $item;
             unset($menu[$key]);
         }
     }
-    ksort($menu); // これをやらないとセパレーターが出ない
+    ksort($menu); // for separator
 }
 
 
@@ -234,14 +236,14 @@ public function init()
         if ($pagenow === 'plugins.php') {
             if (isset($_GET['plugin'])) {
                 if (basename(__FILE__) === basename($_GET['plugin'])) {
-                    return; // なにもしない
+                    return; // nothing to do 
                 }
             }
         }
         add_rewrite_endpoint(SLIDER_API_ENDPOINT, EP_ROOT);
     }
 
-    $sliders = get_option(self::option_sliders);
+    $sliders = get_option(SLIDER_API_OPTION_KEY);
     if (is_array($sliders) && count($sliders)) {
         foreach ($sliders as $post_type => $post_type_name) {
             $this->add_post_types($post_type, $post_type_name);
